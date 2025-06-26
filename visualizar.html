@@ -1,0 +1,25 @@
+<!-- visualizar.html -->
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Equipamentos - MarzagãoTech</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="cadastro-container">
+    <h1>Visualização de Equipamentos</h1>
+    <div class="status-filtros">
+      <a href="visualizar.php?status=funcionando">Funcionando</a>
+      <a href="visualizar.php?status=manutencao">Em Manutenção</a>
+      <a href="visualizar.php?status=descartado">Descartado</a>
+      <a href="visualizar.php">Todos</a>
+    </div>
+    <div class="equipamento-lista">
+      <?php include 'php/visualizar.php'; ?>
+    </div>
+    <p><a href="painel.html">Voltar ao painel</a></p>
+  </div>
+</body>
+</html>
