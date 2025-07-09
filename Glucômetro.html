@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Glucômetro - Simulação</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      background: #1b1b2f;
+      color: #66ccff;
+      font-family: 'Courier New', monospace;
+      display: flex;
+      justify-content: center;
+      padding: 40px 10px;
+      min-height: 100vh;
+      margin: 0;
+    }
+    #glucometro {
+      background: #242544;
+      border-radius: 20px;
+      border: 4px solid #66ccff;
+      width: 400px;
+      padding: 30px 25px;
+      box-shadow: 0 0 30px #66ccffbb;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+    h2 {
+      margin: 0 0 22px 0;
+      text-align: center;
+      font-weight: 700;
+      font-size: 2.1rem;
+      letter-spacing: 3px;
+      user-select: none;
+    }
+    .parametro {
+      background: #1a1a39;
+      border: 2px solid #66ccff;
+      border-radius: 16px;
+      width: 100%;
+      padding: 24px 18px;
+      box-shadow: 0 0 20px #66ccff99;
+      text-align: center;
+      user-select: none;
+    }
+    .parametro .titulo {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: 2.7px;
+      margin-bottom: 16px;
+    }
+    .parametro .valor {
+      font-size: 4.8rem;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.1;
+      color: #99ddff;
+    }
+    .parametro .unidade {
+      font-size: 1.7rem;
+      margin-top: 12px;
+      font-weight: 700;
+      opacity: 0.85;
+    }
+    #btnPower {
+      margin-top: 16px;
+      padding: 22px 0;
+      font-weight: 900;
+      font-size: 1.65rem;
+      color: #002d4c;
+      background-color: #66ccff;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      box-shadow: 0 0 28px #66ccffbb;
+      transition: background-color 0.3s ease;
+    }
+    #btnPower.off {
+      background-color: #20435e;
+      color: #66ccff99;
+      box-shadow: none;
+    }
+    @media (max-width: 440px) {
+      #glucometro {
+        width: 100%;
+        padding: 25px 20px;
+      }
+      .parametro .titulo {
+        font-size: 1.1rem;
+      }
+      .parametro .valor {
+        font-size: 3.8rem;
+      }
+      .parametro .unidade {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="glucometro">
+    <h2>Glucômetro</h2>
+    <div class="parametro">
+      <div class="titulo">Glicose Sanguínea</div>
+      <div class="valor" id="glicose">--</div>
+      <div class="unidade">mg/dL</div>
+    </div>
+    <button id="btnPower" class="off">Ligar</button>
+  </div>
+
+  <script>
+    const btnPower = document.getElementById('btnPower');
+    const glicoseSpan = document.getElementById('glicose');
+
+    let ligado = false;
+    let intervalId;
+
+    function gerarGlicose() {
+      // valores normais entre 70 e 140 mg/dL
+      return 70 + Math.floor(Math.random() * 70);
+    }
+
+    function atualizar() {
+      if (!ligado) return;
+      glicoseSpan.textContent = gerarGlicose();
+    }
+
+    btnPower.addEventListener('click', () => {
+      ligado = !ligado;
+      if (ligado) {
+        btnPower.textContent = 'Desligar';
+        btnPower.classList.remove('off');
+        atualizar();
+        intervalId = setInterval(atualizar, 1400);
+      } else {
+        btnPower.textContent = 'Ligar';
+        btnPower.classList.add('off');
+        clearInterval(intervalId);
+        glicoseSpan.textContent = '--';
+      }
+    });
+  </script>
+</body>
+</html>

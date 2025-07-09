@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bomba de Infusão - Simulação</title>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    background: #1a1a2e;
+    color: #65d6ad;
+    font-family: 'Consolas', 'Courier New', monospace;
+    display: flex;
+    justify-content: center;
+    padding: 30px 10px;
+    min-height: 100vh;
+    margin: 0;
+  }
+  #bomba {
+    background: #16263b;
+    border-radius: 16px;
+    border: 4px solid #65d6ad;
+    width: 460px;
+    padding: 25px 30px;
+    box-shadow: 0 0 18px #65d6ad88;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  h2 {
+    margin: 0 0 15px 0;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.9rem;
+    letter-spacing: 1.9px;
+  }
+  .parametros {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .parametro {
+    flex: 1 1 calc(33.333% - 20px);
+    min-width: 0;
+    background: #11314a;
+    border: 2px solid #4ee2b8;
+    border-radius: 14px;
+    padding: 18px 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 0 10px #65d6adbb;
+  }
+  .parametro .titulo {
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    margin-bottom: 9px;
+  }
+  .parametro .valor {
+    font-size: 3.3rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+  .parametro .unidade {
+    font-size: 1.15rem;
+    margin-top: 4px;
+    font-weight: 600;
+    opacity: 0.85;
+  }
+  #btnPower {
+    margin-top: 12px;
+    padding: 16px 0;
+    font-weight: 800;
+    font-size: 1.35rem;
+    color: #103533;
+    background-color: #65d6ad;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 0 15px #65d6adcc;
+  }
+  #btnPower.off {
+    background-color: #174b41;
+    color: #9ae6cfcc;
+    box-shadow: none;
+  }
+  @media (max-width: 480px) {
+    #bomba {
+      width: 100%;
+      padding: 20px;
+    }
+    .parametros {
+      flex-direction: column;
+      gap: 18px;
+    }
+    .parametro {
+      width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+  <div id="bomba">
+    <h2>Bomba de Infusão</h2>
+    <div class="parametros">
+      <div class="parametro">
+        <div class="titulo">Taxa de Infusão</div>
+        <div class="valor" id="taxa">--</div>
+        <div class="unidade">mL/h</div>
+      </div>
+      <div class="parametro">
+        <div class="titulo">Volume Infundido</div>
+        <div class="valor" id="volume">--</div>
+        <div class="unidade">mL</div>
+      </div>
+      <div class="parametro">
+        <div class="titulo">Tempo Restante</div>
+        <div class="valor" id="tempo">--</div>
+        <div class="unidade">min</div>
+      </div>
+    </div>
+    <button id="btnPower" class="off">Ligar</button>
+  </div>
+
+<script>
+  const btnPower = document.getElementById('btnPower');
+  const taxaSpan = document.getElementById('taxa');
+  const volumeSpan = document.getElementById('volume');
+  const tempoSpan = document.getElementById('tempo');
+
+  let ligado = false;
+  let volumeTotal = 500; // mL total para infusão simulada
+  let volumeInfundido = 0;
+  let taxaAtual = 50; // mL/h padrão
+  let tempoRestante = 0; // em minutos
+  let intervalId;
+
+  function atualizar() {
+    if(!ligado) return;
+
+    // Simula taxa variando 45-55 mL/h
+    taxaAtual = 45 + Math.random() * 10;
+    taxaSpan.textContent = taxaAtual.toFixed(1);
+
+    // Incrementa volume infundido conforme taxa/h (convertendo para min)
+    volumeInfundido += taxaAtual / 60;
+    if(volumeInfundido > volumeTotal) volumeInfundido = volumeTotal;
+    volumeSpan.textContent = volumeInfundido.toFixed(1);
+
+    // Calcula tempo restante em minutos
+    tempoRestante = (volumeTotal - volumeInfundido) / (taxaAtual / 60);
+    tempoSpan.textContent = tempoRestante > 0 ? Math.ceil(tempoRestante) : 0;
+  }
+
+  btnPower.addEventListener('click', () => {
+    ligado = !ligado;
+    if(ligado){
+      btnPower.textContent = "Desligar";
+      btnPower.classList.remove('off');
+      volumeInfundido = 0; // reset
+      atualizar();
+      intervalId = setInterval(atualizar, 1000);
+    } else {
+      btnPower.textContent = "Ligar";
+      btnPower.classList.add('off');
+      clearInterval(intervalId);
+      taxaSpan.textContent = '--';
+      volumeSpan.textContent = '--';
+      tempoSpan.textContent = '--';
+    }
+  });
+</script>
+</body>
+</html>
